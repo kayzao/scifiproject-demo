@@ -11,9 +11,9 @@ class Wall{
         this.h = h;
         fill = c;
     }
-    void display(){
+    void display(int worldx, int worldy){
         strokeWeight(0);
         fill(fill);
-        rect(x, y, w, h);
+        rect(x + worldx, y + worldy, w, h);
     }
 }

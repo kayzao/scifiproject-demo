@@ -1,18 +1,15 @@
 class Player{
-  
+    int rad = 50;
+    final int x = 360;
+    final int y = 240;
     Player(){
         
     }
   
     void display(){
-        fill(0);
+        fill(255);
         strokeWeight(0);
-        circle(width / 2, height / 2, 100);
+        circle(x, y, rad);
     }
-  
-    void checkCollision(){
-    
-    }
-  
   
 }
