@@ -22,7 +22,7 @@ World world;
 
 PVector vel;
 
-final float accel = 20;
+final float accel = 7;
 final float maxVel = 30;
 
 boolean interact = false;
@@ -34,7 +34,12 @@ final float friction = 0.7f;
     keys.put('a', false);
     keys.put('s', false);
     keys.put('d', false);
+    keys.put('W', false);
+    keys.put('A', false);
+    keys.put('S', false);
+    keys.put('D', false);
     keys.put(' ', false);
+
     /* size commented out by preprocessor */;
     vel = new PVector(0, 0);
 
@@ -48,21 +53,27 @@ final float friction = 0.7f;
 
  public void draw(){
     background(0);
-    println(player.x + " " + player.y + " " + width / 2); 
     if(!interact){
-        if(keys.get('w')){
-        vel.y -= accel;
+        if(keys.get('W')){
+            vel.y -= accel / 3;
+        } else if(keys.get('w')){
+            vel.y -= accel;
         }
-        if(keys.get('a')){
+        if(keys.get('A')){
+            vel.x -= accel / 3;
+        } else if(keys.get('a')){
             vel.x -= accel;
         }
-        if(keys.get('s')){
+        if(keys.get('S')){
+            vel.y += accel / 3;
+        } else if(keys.get('s')){
             vel.y += accel;
         }
-        if(keys.get('d')){
+        if(keys.get('D')){
+            vel.x += accel / 3;
+        } else if(keys.get('d')){
             vel.x += accel;
         }
-        vel.limit(maxVel);
         vel.mult(friction);
     }
     
@@ -74,7 +85,8 @@ final float friction = 0.7f;
         Wall curr = world.walls.get(i);
         //left side
         
-        if(curr.x > player.x - player.rad && curr.x < player.x + player.rad && curr.y > player.y - player.rad && curr.y < player.y + player.rad){
+        if(curr.x > world.x + (width / 2) - player.rad && curr.x < world.x + (width / 2) + player.rad && curr.y > world.y + (height / 2) - player.rad && curr.y < world.y + (height / 2) + player.rad){
+            
             if(curr.x > player.x){
                 world.x = curr.x - player.rad;
             }else{
@@ -84,10 +96,11 @@ final float friction = 0.7f;
         }
     }
 
-    text("velx: " + round(vel.x * 100) / 100 + "             vely: " + round(vel.y * 100) / 100, 10, 10);
+    text("velx: " + round(vel.x * 100) / 100 + "           vely: " + round(vel.y * 100) / 100, 10, 10);
 }
  public void keyPressed(){
     keys.put(key, true);
+    
 }
  public void keyReleased(){
     keys.put(key, false);
