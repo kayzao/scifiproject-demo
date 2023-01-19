@@ -15,6 +15,19 @@ import java.io.IOException;
 
 public class scifiprojectdemo extends PApplet {
 
+/*  Author/s: Kelvin Zhao
+ *
+ *  A rought demo of the top-down RPG that I discussed in my Sci-Fi project.
+ *  Controls:
+ *      WASD - move
+ *      Space - interact
+ *      Shift - walk
+ *
+ *  Debug mode can be entered by pressing "`"
+ *
+ *  TODO: Add documentation of the other files (including this one), and implement debug mode using the "`" key.
+ */
+
 HashMap<Character, Boolean> keys = new HashMap<Character, Boolean>();
 boolean shiftPressed, debugMode;
 Player player;
@@ -45,7 +58,7 @@ final float friction = 0.7f;
     vel = new PVector(0, 0);
 
     PImage level = loadImage("bigimage.jpeg");
-    world = new World(level, 4000, 1000);
+    world = new World(level, 4300, 1000);
     world.addWall(3900, 900, 2000, 100);
     world.addWall(3900, 900, 100, 1000);
     world.addWall(3900, 1900, 2000, 100);
@@ -119,8 +132,11 @@ final float friction = 0.7f;
     world.updatePos();
     world.display();
     player.display();
+    if(debugMode){
+        text("velx: " + round(vel.x * 1000) / 1000.f + "       vely: " + round(vel.y * 1000) / 1000.f, 10, 10);
+        text("World pos: " + world.x + ", " + world.y, 10, 30);
+    }
     
-    text("velx: " + round(vel.x * 1000) / 1000.f + "       vely: " + round(vel.y * 1000) / 1000.f, 10, 10);
 }
  public void keyPressed(){
     if(keys.containsKey(key)){
@@ -134,6 +150,7 @@ final float friction = 0.7f;
     }
     if(key == '`'){
         println("debug mode " + (!debugMode ? "off" : "on"));
+        debugMode = !debugMode;
     }
 }
 class Player{
@@ -207,9 +224,6 @@ class World{
         for(int i = 0; i < walls.size(); i++){
             walls.get(i).display(-x, -y);
         }
-        fill(255);
-
-        text("World pos: " + x + ", " + y, 10, 30);
     }
 }
 

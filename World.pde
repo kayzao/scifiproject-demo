@@ -35,8 +35,5 @@ class World{
         for(int i = 0; i < walls.size(); i++){
             walls.get(i).display(-x, -y);
         }
-        fill(255);
-
-        text("World pos: " + x + ", " + y, 10, 30);
     }
 }

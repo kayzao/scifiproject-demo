@@ -41,7 +41,7 @@ void setup(){
     vel = new PVector(0, 0);
 
     PImage level = loadImage("bigimage.jpeg");
-    world = new World(level, 4000, 1000);
+    world = new World(level, 4300, 1000);
     world.addWall(3900, 900, 2000, 100);
     world.addWall(3900, 900, 100, 1000);
     world.addWall(3900, 1900, 2000, 100);
@@ -115,8 +115,11 @@ void draw(){
     world.updatePos();
     world.display();
     player.display();
+    if(debugMode){
+        text("velx: " + round(vel.x * 1000) / 1000. + "       vely: " + round(vel.y * 1000) / 1000., 10, 10);
+        text("World pos: " + world.x + ", " + world.y, 10, 30);
+    }
     
-    text("velx: " + round(vel.x * 1000) / 1000. + "       vely: " + round(vel.y * 1000) / 1000., 10, 10);
 }
 void keyPressed(){
     if(keys.containsKey(key)){
@@ -130,5 +133,6 @@ void keyReleased(){
     }
     if(key == '`'){
         println("debug mode " + (!debugMode ? "off" : "on"));
+        debugMode = !debugMode;
     }
 }
