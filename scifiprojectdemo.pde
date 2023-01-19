@@ -1,5 +1,18 @@
+/*  Author/s: Kelvin Zhao
+ *
+ *  A rought demo of the top-down RPG that I discussed in my Sci-Fi project.
+ *  Controls:
+ *      WASD - move
+ *      Space - interact
+ *      Shift - walk
+ *
+ *  Debug mode can be entered by pressing "`"
+ *
+ *  TODO: Add documentation of the other files (including this one), and implement debug mode using the "`" key.
+ */
+
 HashMap<Character, Boolean> keys = new HashMap<Character, Boolean>();
-boolean shuftPressed;
+boolean shiftPressed, debugMode;
 Player player;
 
 World world; 
@@ -27,13 +40,12 @@ void setup(){
     size(720, 600);
     vel = new PVector(0, 0);
 
-    PImage level = loadImage("test.jpg");
-    world = new World(level);
-    world.addWall(100, 100, 2000, 100);
-    world.addWall(100, 100, 100, 1000);
-    world.addWall(100, 1000, 2000, 100);
-    world.addWall(2000, 100, 100, 500);
-
+    PImage level = loadImage("bigimage.jpeg");
+    world = new World(level, 4000, 1000);
+    world.addWall(3900, 900, 2000, 100);
+    world.addWall(3900, 900, 100, 1000);
+    world.addWall(3900, 1900, 2000, 100);
+    world.addWall(5900, 900, 100, 500);
     player = new Player();
 }
 
@@ -84,6 +96,20 @@ void draw(){
                 world.x = curr.x + curr.w + player.size - width / 2;
             }
         }
+        //top side
+        if(playerY >= curr.y - player.size && playerY <= curr.y && playerX >= curr.x && playerX <= curr.x + curr.w){
+            if(vel.y > 0){
+                vel.y = 0;
+                world.y = curr.y - player.size - height / 2;
+            }
+        }
+        //bottom side
+        if(playerY >= curr.y + curr.h && playerY <= curr.y + curr.h + player.size && playerX >= curr.x && playerX <= curr.x + curr.w){
+            if(vel.y < 0){
+                vel.y = 0;
+                world.y = curr.y + curr.h + player.size - height / 2;
+            }
+        }
     }
 
     world.updatePos();
@@ -101,5 +127,8 @@ void keyPressed(){
 void keyReleased(){
     if(keys.containsKey(key)){
         keys.put(key, false);
+    }
+    if(key == '`'){
+        println("debug mode " + (!debugMode ? "off" : "on"));
     }
 }

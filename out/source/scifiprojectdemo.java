@@ -16,7 +16,7 @@ import java.io.IOException;
 public class scifiprojectdemo extends PApplet {
 
 HashMap<Character, Boolean> keys = new HashMap<Character, Boolean>();
-boolean shuftPressed;
+boolean shiftPressed, debugMode;
 Player player;
 
 World world; 
@@ -44,13 +44,12 @@ final float friction = 0.7f;
     /* size commented out by preprocessor */;
     vel = new PVector(0, 0);
 
-    PImage level = loadImage("test.jpg");
-    world = new World(level);
-    world.addWall(100, 100, 2000, 100);
-    world.addWall(100, 100, 100, 1000);
-    world.addWall(100, 1000, 2000, 100);
-    world.addWall(2000, 100, 100, 500);
-
+    PImage level = loadImage("bigimage.jpeg");
+    world = new World(level, 4000, 1000);
+    world.addWall(3900, 900, 2000, 100);
+    world.addWall(3900, 900, 100, 1000);
+    world.addWall(3900, 1900, 2000, 100);
+    world.addWall(5900, 900, 100, 500);
     player = new Player();
 }
 
@@ -101,6 +100,20 @@ final float friction = 0.7f;
                 world.x = curr.x + curr.w + player.size - width / 2;
             }
         }
+        //top side
+        if(playerY >= curr.y - player.size && playerY <= curr.y && playerX >= curr.x && playerX <= curr.x + curr.w){
+            if(vel.y > 0){
+                vel.y = 0;
+                world.y = curr.y - player.size - height / 2;
+            }
+        }
+        //bottom side
+        if(playerY >= curr.y + curr.h && playerY <= curr.y + curr.h + player.size && playerX >= curr.x && playerX <= curr.x + curr.w){
+            if(vel.y < 0){
+                vel.y = 0;
+                world.y = curr.y + curr.h + player.size - height / 2;
+            }
+        }
     }
 
     world.updatePos();
@@ -118,6 +131,9 @@ final float friction = 0.7f;
  public void keyReleased(){
     if(keys.containsKey(key)){
         keys.put(key, false);
+    }
+    if(key == '`'){
+        println("debug mode " + (!debugMode ? "off" : "on"));
     }
 }
 class Player{
@@ -154,27 +170,45 @@ class Wall{
         rect(x + worldx, y + worldy, w, h);
     }
 }
+/* 
+ * The World class is used to display the background imagery of the game and control the camera.
+ * It also contains the walls of the level, which are stored with the ArrayList "walls".
+ *
+ * Integers "x" and "y" are used to store the position of the top-left corner of the window, relative to the level.
+ * PImage "level" is used to store the background image. Eventually, background should be optimized to use smaller images.
+ */
+
 class World{
     int x, y;
     PImage level;
     ArrayList<Wall> walls = new ArrayList<Wall>();
-    World(PImage level){
+
+    World(PImage level, int startX, int startY){
         this.level = level;
+        x = startX;
+        y = startY;
     }
+    World(PImage level){
+        this(level, 0, 0);
+    }
+
      public void updatePos(){
         x += vel.x;
         y += vel.y;
         
     }
+
      public void addWall(int x, int y, int w, int h){
         walls.add(new Wall(x, y, w, h));
     }
+
      public void display(){
         image(level, -x, -y, level.width, level.height);
         for(int i = 0; i < walls.size(); i++){
             walls.get(i).display(-x, -y);
         }
         fill(255);
+
         text("World pos: " + x + ", " + y, 10, 30);
     }
 }
