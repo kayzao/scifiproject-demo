@@ -19,6 +19,6 @@ class World{
             walls.get(i).display(-x, -y);
         }
         fill(255);
-        text((x + ", " + y), 10, 30);
+        text("World pos: " + x + ", " + y, 10, 30);
     }
 }

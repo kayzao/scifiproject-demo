@@ -1,7 +1,7 @@
 class Player{
-    int rad = 50;
-    final int x = 360;
-    final int y = 240;
+    int size = 25;
+    final int x = width / 2;
+    final int y = height /2;
     Player(){
         
     }
@@ -9,7 +9,7 @@ class Player{
     void display(){
         fill(255);
         strokeWeight(0);
-        circle(x, y, rad);
+        circle(x, y, size * 2);
     }
   
 }

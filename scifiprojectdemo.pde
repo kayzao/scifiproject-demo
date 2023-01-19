@@ -1,5 +1,6 @@
 HashMap<Character, Boolean> keys = new HashMap<Character, Boolean>();
-Player player = new Player();
+boolean shuftPressed;
+Player player;
 
 World world; 
 
@@ -26,12 +27,14 @@ void setup(){
     size(720, 600);
     vel = new PVector(0, 0);
 
-    PImage level = loadImage("bigimage.jpeg");
+    PImage level = loadImage("test.jpg");
     world = new World(level);
     world.addWall(100, 100, 2000, 100);
     world.addWall(100, 100, 100, 1000);
     world.addWall(100, 1000, 2000, 100);
     world.addWall(2000, 100, 100, 500);
+
+    player = new Player();
 }
 
 void draw(){
@@ -58,33 +61,45 @@ void draw(){
             vel.x += accel;
         }
         vel.mult(friction);
+        if(vel.mag() < 0.1) vel.set(0, 0);
     }
     
-    
-    world.updatePos();
-    world.display();
-    player.display();
     for(int i = 0; i < world.walls.size(); i++){
         Wall curr = world.walls.get(i);
-        //left side
+        text(curr.x + " " + curr.y, curr.x - world.x, curr.y - world.y);
+        int playerX = world.x + width / 2 + round(vel.x);
+        int playerY = world.y + height / 2 + round(vel.y);
         
-        if(curr.x > world.x + (width / 2) - player.rad && curr.x < world.x + (width / 2) + player.rad && curr.y > world.y + (height / 2) - player.rad && curr.y < world.y + (height / 2) + player.rad){
-            
-            if(curr.x > player.x){
-                world.x = curr.x - player.rad;
-            }else{
-                world.x = curr.x + player.rad;
+        //left side
+        if(playerX >= curr.x - player.size && playerX <= curr.x && playerY >= curr.y && playerY <= curr.y + curr.h){
+            if(vel.x > 0){
+                vel.x = 0;
+                world.x = curr.x - player.size - width / 2;
             }
-            vel.x = 0;
+        }
+        //right side
+        if(playerX >= curr.x + curr.w && playerX <= curr.x + curr.w + player.size && playerY >= curr.y && playerY <= curr.y + curr.h){
+            if(vel.x < 0){
+                vel.x = 0;
+                world.x = curr.x + curr.w + player.size - width / 2;
+            }
         }
     }
 
-    text("velx: " + round(vel.x * 100) / 100 + "           vely: " + round(vel.y * 100) / 100, 10, 10);
+    world.updatePos();
+    world.display();
+    player.display();
+    
+    text("velx: " + round(vel.x * 1000) / 1000. + "       vely: " + round(vel.y * 1000) / 1000., 10, 10);
 }
 void keyPressed(){
-    keys.put(key, true);
+    if(keys.containsKey(key)){
+        keys.put(key, true);
+    }
     
 }
 void keyReleased(){
-    keys.put(key, false);
+    if(keys.containsKey(key)){
+        keys.put(key, false);
+    }
 }
